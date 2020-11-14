@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<RootNamespace>Save_Editor</RootNamespace>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<UseWPF>true</UseWPF>
+		<Version>1.0.0.0</Version>
+		<Authors>Gregory</Authors>
+		<Company>None</Company>
+		<Copyright>Copyright © 2020</Copyright>
+		<LangVersion>preview</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
+		<PackageReference Include="PropertyChanged.Fody" Version="3.2.9" PrivateAssets="All" />
+	</ItemGroup>
+
+</Project>

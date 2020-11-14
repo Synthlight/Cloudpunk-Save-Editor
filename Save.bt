@@ -1,0 +1,225 @@
+//------------------------------------------------
+//--- 010 Editor v11.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+typedef struct {
+    ubyte length<hidden=true>;
+    if (length > 0) char value[length]<hidden=true>;
+} CString<open=suppress, read=ReadCString, write=WriteCString>;
+string ReadCString(CString &str) {
+    if (exists(str.value)) return str.value;
+    else return "";
+}
+void WriteCString(CString &str, string newString) {
+    local int strLength = Strlen(newString);
+    str.value = SubStr(newString, 0, strLength);
+}
+
+enum <ubyte> bool { False = 0, True = 1 };
+typedef struct { float x; float y; float z; } Vector3;
+typedef struct { float x; float y; float z; float w; } Quaternion;
+typedef struct { Vector3 position; Vector3 rotation; } Transform;
+typedef struct { bool value; } GameObject;
+
+struct Header {
+    int version;
+    int sceneId;
+    float timeSinceStart;
+    CString time;
+    time_t epoch;
+} header<name="Header">;
+
+typedef struct {
+    CString id;
+    bool isPlaying;
+    bool completed;
+
+    int lineCount<hidden=true>;
+    bool linesPlayed[lineCount];
+} Dialog;
+
+int dialogCount<hidden=true>;
+struct DialogWrapper {
+    Dialog dialog[dialogCount]<optimize=false>;
+} dialog<name="Dialog">;
+
+typedef struct {
+    CString id;
+    bool enabled;
+    int progressCurrent;
+    int progressMax;
+} QuestText;
+
+int questTextCount<hidden=true>;
+struct QuestTextWrapper {
+    QuestText questText[questTextCount]<optimize=false>;
+} questText<name="Quest Text">;
+
+typedef struct {
+    CString id;
+    int version;
+    bool unknown<hidden=true>; // writer.Write<bool>(true);
+    int amount;
+    if (version >= 2) {
+        int totalAmountAvailable;
+        if (version >= 3) {
+            bool isEquipped;
+        }
+    }
+} Item;
+
+int itemCount<hidden=true>;
+struct ItemWrapper {
+    Item item[itemCount]<optimize=false>;
+} items<name="Items">;
+
+struct Player {
+    int version;
+    bool enabledLoadState;
+    Vector3 transform_position;
+    Vector3 transform_eulerAngles;
+    int health;
+    Quaternion defaultAlignment;
+    Quaternion alignment;
+    Vector3 moveToPoint_localPosition;
+    bool unknown<hidden=true>; // writer.Write<bool>(false);
+    if (version >= 2) CString nextSpawnPoint;
+    if (version >= 3) {
+        int charactersToEnableLength<hidden=true>;
+        CString charactersToEnable[charactersToEnableLength]<optimize=false>;
+        int charactersToSpawnLength<hidden=true>;
+        CString charactersToSpawn[charactersToSpawnLength]<optimize=false>;
+        if (version >= 4) {
+            int charactersToDisableLength<hidden=true>;
+            CString charactersToDisable[charactersToDisableLength]<optimize=false>;
+            if (version >= 5) {
+                bool freeLook;
+                if (version >= 6) {
+                    float zoomFactor;
+                    if (version >= 7) {
+                        bool lastFreeLook;
+                        bool cameraLocked;
+                    }
+                }
+            }
+        }
+    }
+} player<name="Player">;
+
+struct Car {
+    if (header.version >= 3) {
+        enum <int> {
+            Default = 1,
+            // New Cars
+            _2 = 2,
+            _3 = 3,
+            _4 = 4,
+            _5 = 5,
+            _6 = 6,
+            _7 = 7,
+            _8 = 8,
+            _9 = 9
+        } carId;
+    }
+    int version;
+    bool gameObject_activeInHierarchy;
+    Vector3 transform_position;
+    Vector3 transform_eulerAngles;
+    float currentFloorLevel;
+    int hitBelowCounter;
+    float currentStatus;
+    float currentFuel;
+    bool parkObject_activeInHierarchy;
+    Vector3 parkObject_transform_position;
+    Vector3 parkObject_transform_eulerAngles;
+    if (version >= 2) bool controlsFrozen;
+    if (version >= 3) {
+        bool isInVehicleCockpit;
+        uint currentCracksTexIndex;
+    }
+} car<name="Car">;
+
+int money;
+int numLocationsUnlocked;
+if (header.version >= 8) {
+    int numRepairs;
+    if (header.version >= 9) {
+        bool blockingOverride;
+    }
+}
+
+typedef struct {
+    CString id;
+    int count;
+    struct SavedObjectValues {
+        int id; // out SavedObject.tempValue
+        enum <int> {
+            Bool = 0,
+            Float = 1,
+            Int = 2,
+            Vector3_ = 3,
+            Transform_ = 4,
+            String = 5,
+            GameObject_ = 6
+        } type;
+        switch (type) {
+            case Bool: bool value; break;
+            case Float: float value; break;
+            case Int: int value; break;
+            case Vector3_: Vector3 value; break;
+            case Transform_: Transform value; break;
+            case String: CString value; break;
+            case GameObject_: GameObject value; break;
+            default: break;
+        }
+    } savedObjectValues[count]<optimize=false>;
+} SavedObject;
+
+int savedObjectsCount<hidden=true>;
+struct SavedObjectsWrapper {
+    SavedObject savedObjects[savedObjectsCount]<optimize=false>;
+} savedObjects<name="Saved Objects">;
+
+if (header.version >= 2) {
+    int playerCar_restrictLandingToParkVolumeID;
+    if (header.version >= 4) {
+        int holocashAccountsCount<hidden=true>;
+        struct HolocashAccount {
+            CString key;
+            int funds;
+        } holocashAccount[holocashAccountsCount]<optimize=false>;
+        if (header.version >= 5) {
+            int playerCar_activateHuxleyAtParkVolumeID;
+            if (header.version >= 7) {
+                int playerCar_activatePashtaAtParkVolumeID;
+                if (header.version >= 10) {
+                    float joosTimeLeft;
+                    float joosTimePassed;
+                    float alcoholTimeLeft;
+                    float alcoholTimePassed;
+                    float speedGainTimeLeft;
+                    float stimsTimeLeft;
+                    float stimsTimePassed;
+                    float pheromonesTimeLeft;
+                    float pheromonesTimePassed;
+                    if (header.version >= 11) {
+                        float foodCooldown;
+                        float drinkCooldown;
+                        float drugCooldown;
+                        if (header.version >= 12) {
+                            bool globalVehicleDamage;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
